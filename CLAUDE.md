@@ -530,3 +530,97 @@ Migrations must be additive only (`CREATE TABLE IF NOT EXISTS`, `ALTER TABLE ADD
 ### CDN whitelist
 
 `cdn_whitelist` entries in the manifest must be `https://` origins only (e.g. `"https://cdn.jsdelivr.net"`). No paths, no wildcards, no `http://`. The hub rejects manifests with invalid entries and strips any that bypass validation at CSP-build time.
+
+## AI access (MCP)
+
+Apps are **invisible to AI clients by default**. Opt in explicitly — this is intentional: private apps (couples apps, therapy notes, etc.) should never appear in AI tool listings.
+
+Add `ai_access` to your manifest to enable MCP access:
+
+```json
+{
+  "ai_access": {
+    "allowed": true,
+    "mode": "read"
+  }
+}
+```
+
+### Field reference
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `allowed` | boolean | `false` | Master switch. Must be `true` for any MCP access. |
+| `mode` | `"read"` \| `"read_write"` | `"read"` | `"read"` allows `get_app_data` only. `"read_write"` also allows `set_app_data`. |
+| `db_exports` | `string[]` | `[]` | Named SELECT queries exposed via `query_app_db`. DB-storage apps only. |
+| `requires_admin_approval` | boolean | `false` | If true, the hub admin must explicitly grant AI access after install. |
+
+### KV apps — reading and writing via MCP
+
+With `allowed: true` and `mode: "read"`, an AI client can read any key from your app's KV store via the `get_app_data` tool. With `mode: "read_write"`, it can also write via `set_app_data`.
+
+```json
+{
+  "ai_access": {
+    "allowed": true,
+    "mode": "read_write"
+  }
+}
+```
+
+KV access goes through the normal MCP tool layer — no additional app-side work needed.
+
+### DB apps — named query exports
+
+DB-storage apps cannot be queried with raw SQL via MCP. Instead, declare named SELECT queries in `ai_access.db_exports` and put the SQL files in `src/queries/`:
+
+```json
+{
+  "storage": "db",
+  "ai_access": {
+    "allowed": true,
+    "mode": "read",
+    "db_exports": ["open_tasks", "overdue_tasks", "task_summary"]
+  }
+}
+```
+
+Each name maps to `src/queries/{name}.sql`. The build script includes everything under `src/` in the bundle, so these files are automatically packaged and served.
+
+**Query file conventions:**
+
+- Files must be `SELECT` or `WITH ... SELECT` statements — the hub rejects anything else
+- Always filter by `household_id` explicitly — do not rely on default values alone:
+  ```sql
+  WHERE household_id = current_setting('app.household_id', true)::uuid
+  ```
+- Include `LIMIT` to bound result size
+- The query runs under the `hub_app_executor` Postgres role with `search_path` set to your app's schema — unqualified table names resolve to your schema, not hub tables
+- No parameterized inputs — named queries are fixed SELECT statements with no user-supplied values
+
+Example (`src/queries/open_tasks.sql`):
+
+```sql
+SELECT
+  t.id,
+  t.title,
+  t.assignee_id,
+  t.due_date,
+  t.priority,
+  l.name AS list_name
+FROM tasks t
+LEFT JOIN lists l
+  ON l.id = t.list_id
+  AND l.household_id = t.household_id
+WHERE t.household_id = current_setting('app.household_id', true)::uuid
+  AND t.completed = 0
+ORDER BY t.due_date NULLS LAST, t.priority DESC
+LIMIT 200
+```
+
+### Privacy and admin overrides
+
+- Apps with no `ai_access` field (or `allowed: false`) are completely invisible to MCP clients — they do not appear in `list_apps` results and their data cannot be accessed
+- A hub admin can set `disabled: true` via `PATCH /api/apps/{id}/ai-access` to block MCP access for any app regardless of its manifest
+- Admins cannot *enable* AI access for an app that declared `allowed: false` — only the manifest can grant it
+- Consider whether your app contains sensitive content before enabling `ai_access`. Couples apps, therapy journals, and similar private apps should leave `allowed: false`

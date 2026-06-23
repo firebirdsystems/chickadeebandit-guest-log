@@ -731,6 +731,22 @@ same restrictions.
 
 ### Policy kinds
 
+#### `endpoint_only` — table written exclusively by a trusted hub endpoint
+
+```json
+{ "kind": "endpoint_only" }
+{ "kind": "endpoint_only", "read": "adult" }
+{ "kind": "endpoint_only", "read": "none" }
+```
+
+Rejects **all** app-originated INSERT/UPDATE/DELETE with 403. Use when a table is written only by a trusted manifest-driven hub endpoint (e.g. `anonymous_responses`, `anonymous_ballot`). Trusted hub operations bypass row policies entirely and can still write.
+
+- `read` defaults to `"everyone"` — all members may SELECT
+- `read: "adult"` — only adults may SELECT (children get 403)
+- `read: "none"` — all reads also blocked; results released only through a trusted endpoint (e.g. secret-ballot tallies, anonymous survey responses before session closure)
+
+Example: `responses` and `ballot` tables written by `anonymous_responses` / `anonymous_ballot` hub endpoints, where `read:"none"` keeps raw answers hidden until the session closes.
+
 #### `adult_writable` — everyone reads, only adults write
 
 ```json
@@ -765,8 +781,19 @@ Read-all, **write-none via `/api/db`**. The only writer is `POST /run/{app}/api/
 - Adults: unrestricted by default. Set `"adults_bypass": false` to restrict adults too (e.g. each adult only sees their own rows).
 - Add `"bypass_group_setting": { "settings_table": "settings", "settings_key": "board_group_id" }` to give members of a configurable hub group (e.g. "board", "admins") unrestricted access regardless of `adults_bypass`.
 - Add `"insert_privileged_only": true` (requires `bypass_group_setting`) to block `INSERT` for everyone except the privileged group — returns 403 for all other callers regardless of adult status. SELECT/UPDATE/DELETE are unaffected.
+- Add `"endpoint_writes_only": true` to block all app-originated INSERT/UPDATE/DELETE while keeping owner-based read filtering in place. Use this when a table's data must only be written by a trusted hub endpoint (e.g. vote receipts created by `anonymous_responses`), but reads should still be filtered by ownership and `adults_bypass`:
 
-Example: piggy-bank `piggy_banks`/`transactions` — a child only sees their own bank/transactions; adults (parents) see everyone's.
+```json
+{
+  "kind": "owner_only",
+  "member_column": "member_id",
+  "adults_bypass": false,
+  "member_can_update": false,
+  "endpoint_writes_only": true
+}
+```
+
+Example: piggy-bank `piggy_banks`/`transactions` — a child only sees their own bank/transactions; adults (parents) see everyone's. Vote receipts for attributed polls — each member can see their own receipt (confirming they voted), but all receipt creation goes through the `submit-response` hub endpoint.
 
 #### `owner_only_with_fk_check` — like `owner_only`, but the row references another owned row
 
@@ -886,16 +913,18 @@ their own violations; board members see/log on any violation); document-library
 
 | Your table looks like... | Use |
 |---|---|
+| Table written only by a trusted hub endpoint; result access controlled separately | `endpoint_only` with appropriate `read` |
 | Shared content adults manage, everyone reads (chores, polls, surveys) | `adult_writable` |
 | Same, but non-adults should only read their own rows | `adult_writable` with `member_read_column` |
 | Settings row that names a privileged group (board_group_id, committee_group_id) | `app_config` |
 | One row per member, only that member (and maybe adults) should see it | `owner_only` |
+| Same, but writes must go through a hub endpoint (e.g. vote receipts) | `owner_only` with `endpoint_writes_only: true` |
 | Like the above, but the row references another owned row (e.g. a transaction against a bank) | `owner_only_with_fk_check` |
 | A row can be private, shared with adults, or shared with everyone | `owner_or_visibility` |
 | Table-wide, adults-only data (account balances, fund totals) | `adult_only` |
 | Shared between exactly two partnered members | `couple_scoped` |
 | Votes/comments/logs/check-offs whose visibility should match a parent record | `inherit_visibility` |
-| Anonymous data with no per-row ownership at all (e.g. cast ballots, separate from a "have voted" receipt table) | no policy — but pair with a receipt table under `owner_only` + `adults_bypass:false` + `member_can_update:false`; use `anonymous_responses` or `anonymous_ballot` manifest mechanisms to write both atomically |
+| Anonymous data with no per-row ownership at all (e.g. cast ballots, raw anonymous responses) | `endpoint_only` with `read:"none"` — pair with a receipt table under `owner_only` + `adults_bypass:false` + `member_can_update:false` + `endpoint_writes_only:true`; use `anonymous_responses` or `anonymous_ballot` manifest mechanisms to write both atomically |
 | Everyone can read, but only a specific group may INSERT (e.g. board-managed docs) | `owner_or_visibility` with `everyone_values`, `write_owner_only: true`, and `insert_privileged_only: true` |
 | Child rows where only a privileged group may create them (e.g. document versions) | `inherit_visibility` with `insert_privileged_only: true` |
 
@@ -998,18 +1027,25 @@ CREATE UNIQUE INDEX IF NOT EXISTS responses_member_unique
   WHERE member_id IS NOT NULL;
 ```
 
-Receipt table row policy — immutable and invisible to everyone including adults:
+Receipt table row policy — immutable and invisible to everyone including adults, writes blocked except through the hub endpoint:
 
 ```json
 "response_receipts": {
   "kind": "owner_only",
   "member_column": "member_id",
   "adults_bypass": false,
-  "member_can_update": false
+  "member_can_update": false,
+  "endpoint_writes_only": true
 }
 ```
 
-Response table: **no row policy** — the hub writes it directly via trusted server ops, never via `/api/db`.
+Response table — use `endpoint_only` so app-originated writes are rejected and reads are controlled:
+
+```json
+"responses": { "kind": "endpoint_only", "read": "none" }
+```
+
+`read: "none"` keeps raw responses hidden until a trusted hub endpoint releases them (e.g. `/api/response-results` after session closure). Use `read: "everyone"` or `read: "adult"` if attributed responses should be readable directly once the session closes. Never leave the response table without a row policy — without it any member can INSERT, UPDATE, or DELETE response rows via `/api/db`.
 
 ### Calling the endpoint
 

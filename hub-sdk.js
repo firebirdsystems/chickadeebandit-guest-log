@@ -250,6 +250,37 @@ export function hubConfirm(message, opts = {}) {
   });
 }
 
+/**
+ * hubAlert(message, opts?)
+ * Show a single-button notification dialog rendered by the parent hub frame,
+ * avoiding the browser's "an embedded page says…" iframe alert chrome.
+ * Falls back to window.alert() when used outside the hub.
+ *
+ * Use: await hubAlert("Save failed");
+ *      hubAlert("Heads up", { description: "Pick at least one option.", confirmLabel: "OK" });
+ */
+export function hubAlert(message, opts = {}) {
+  if (window.parent === window) {
+    const text = typeof message === "string" ? message : (message.message ?? message.title ?? "");
+    window.alert(text);
+    return Promise.resolve();
+  }
+  const id = crypto.randomUUID();
+  return new Promise(resolve => {
+    function handler(e) {
+      if (e.data?.type === "hub:alert:response" && e.data.id === id) {
+        window.removeEventListener("message", handler);
+        resolve();
+      }
+    }
+    window.addEventListener("message", handler);
+    const payload = typeof message === "string"
+      ? { message, ...opts }
+      : { message: message.message ?? message.title, ...message, ...opts };
+    window.parent.postMessage({ type: "hub:alert", id, ...payload }, "*");
+  });
+}
+
 // ── Deep linking ───────────────────────────────────────────────────────────────
 /**
  * hubOpen(appId, params?)
@@ -322,7 +353,7 @@ export function createEventPoller(eventsUrl, eventType, callback, intervalMs = 3
 /**
  * createStreamHelper(streamUrl, eventType, callback)
  * Opens an SSE connection to the hub stream endpoint and calls callback(event)
- * for each matching event. Auto-reconnects on close (handles Vercel's 55s cutoff).
+ * for each matching event. Auto-reconnects on close to handle SSE connection limits.
  * Returns { connect(), disconnect() }.
  *
  * Use: const stream = createStreamHelper(window.__STREAM_URL, "stroke", onStroke);

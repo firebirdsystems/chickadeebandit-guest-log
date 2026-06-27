@@ -51,7 +51,7 @@ Using `TEXT` causes a Postgres type error (`operator does not exist: text = uuid
 Import shared utilities from `/hub-sdk.js`:
 
 ```js
-import { memberColor, initial, esc, isAdult, hubConfirm, formatRelativeDate, fmtMoney, fmtMoneyShort } from "/hub-sdk.js";
+import { memberColor, initial, esc, isAdult, hubConfirm, hubAlert, formatRelativeDate, fmtMoney, fmtMoneyShort } from "/hub-sdk.js";
 ```
 
 - `memberColor(memberId, members)` — deterministic color string for a member's avatar
@@ -59,6 +59,7 @@ import { memberColor, initial, esc, isAdult, hubConfirm, formatRelativeDate, fmt
 - `esc(str)` — HTML-escape a string before injecting into innerHTML
 - `isAdult(member, members)` — returns true if the member has role "adult"
 - `hubConfirm({ message, description?, confirmLabel?, destructive? })` — async confirm dialog; returns true/false
+- `hubAlert(message, { description?, confirmLabel? })` — async single-button notification dialog. **Always use this instead of `alert()`.** A raw `alert()` fires the browser's native dialog, which inside the hub iframe renders as an "an embedded page at …app… says" popup with stripped-down chrome — confusing and off-brand. `hubAlert` posts to the parent hub frame, which renders the message in the hub's own themed dialog. Same idea for confirmations: use `hubConfirm`, never `confirm()`.
 - `fmtMoney(cents)` — format integer cents as USD with no decimals: `fmtMoney(125000)` → `"$1,250"`. Returns `"—"` for null.
 - `fmtMoneyShort(cents)` — compact format for large amounts: `$450K`, `$1.3M`. Use for summary displays.
 - `createStreamHelper(streamUrl, eventType, callback)` — opens an SSE connection to `window.__STREAM_URL` and calls `callback(event)` for each event. Auto-reconnects on close. Returns `{ connect(), disconnect() }`. Pass `null` as `eventType` to receive all event types.
@@ -67,18 +68,23 @@ Always use `esc()` when rendering user-provided strings into HTML templates.
 
 ### Updating hub-sdk.js
 
-`hub-sdk.js` exists in three places that must all be kept in sync whenever a function is added or changed:
+`hub-sdk.js` has exactly **two** live copies, in two separate repos. Keep them byte-identical whenever you add or change a function:
 
-1. `app-template/hub-sdk.js` — canonical source. `dev.mjs` fetches this file from GitHub to serve during local development. **This is the file to edit.**
-2. Root `hub-sdk.js` (one level up from `app-template/`) — convenience copy used as a reference; keep identical to `app-template/hub-sdk.js`.
-3. `packages/hub/public/hub-sdk.js` in the **chickadeebandit** repo — the file actually served to apps at runtime in production. Must be updated to match or new SDK functions won't be available in the deployed hub.
+1. `app-template/hub-sdk.js` — **canonical source; edit this.** Published to the app-template GitHub repo, which every app's `dev.mjs` fetches (and caches as `.hub-sdk.js`) for local development.
+2. `packages/hub/public/hub-sdk.js` in the **chickadeebandit** hub repo — the file actually served to apps at `/hub-sdk.js` in production.
 
-After editing `app-template/hub-sdk.js`, copy it to the other two locations:
+Apps do **not** bundle the SDK — `build.mjs` only packages `manifest.json` + `src/`, and every `dev.mjs` fetches the SDK over the network. So don't add a per-app `hub-sdk.js`; any such copy is vestigial and used by nothing.
+
+After editing the canonical copy, sync it to the hub repo (assumes the hub repo is checked out as a sibling of the apps repo):
 
 ```bash
-cp app-template/hub-sdk.js hub-sdk.js
-cp app-template/hub-sdk.js ../chickadeebandit/packages/hub/public/hub-sdk.js
+npm run sync-sdk     # copies app-template/hub-sdk.js → packages/hub/public/hub-sdk.js
+npm run check-sdk    # verify only — exits non-zero on drift
 ```
+
+Then commit and push **both** repos: the app-template change (so `dev.mjs` serves the new SDK) and the hub change (so production serves it). They land independently, so land the app-template change first — a new helper isn't fully available until both are deployed.
+
+A CI guard in the hub repo (`packages/hub/__tests__/unit/hub-sdk-sync.test.ts`) fetches the canonical copy from the app-template repo's `main` and fails if the runtime copy has drifted, so a forgotten sync is caught automatically.
 
 ## Loading members
 
@@ -293,6 +299,8 @@ function openModal(html) {
 }
 function closeModal() { modalEl?.remove(); modalEl = null; }
 ```
+
+Use `openModal` for rich, app-styled content (forms, multi-button flows, anything with custom markup). For a one-off message or a yes/no question, **do not reach for the native `alert()`/`confirm()`** — they render as the browser's "an embedded page says" iframe popup. Use `hubAlert(message)` / `hubConfirm(message)` from `/hub-sdk.js` instead; they render in the hub's own themed dialog. Reserve a bespoke `openModal` only when the notification needs an action beyond a plain OK (e.g. the partner-pairing "Waiting for…" modal with a **Check Again** button that re-polls).
 
 ## Loading state on submit buttons
 

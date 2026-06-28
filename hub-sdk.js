@@ -291,6 +291,61 @@ export function hubOpen(appId, params = {}) {
   window.parent.postMessage({ type: "hub:open", appId, params }, "*");
 }
 
+/**
+ * hubAppUrl(appId?, params?)
+ * Build a URL that opens an app through the hub shell. Use this for notification
+ * click targets; `/run/{app}` is the isolated app runtime and should not be used
+ * as a user-facing link.
+ * Use: hubAppUrl("event-rsvps", { eventId }) -> "/open/event-rsvps?eventId=..."
+ */
+export function hubAppUrl(appId = window.__APP_ID, params = {}) {
+  if (!appId) return "/";
+  const qs = new URLSearchParams(params).toString();
+  return `/open/${encodeURIComponent(appId)}${qs ? `?${qs}` : ""}`;
+}
+
+/**
+ * normalizeHubUrl(url?, appId?)
+ * Converts old app-runtime links (`/run/{app}`) into hub-shell links
+ * (`/open/{app}`), and defaults empty URLs to the current app's hub URL.
+ */
+export function normalizeHubUrl(url, appId = window.__APP_ID) {
+  if (!url) return hubAppUrl(appId);
+  return String(url).replace(/^\/run\//, "/open/");
+}
+
+/**
+ * sendHubNotification({ title, body, audience?, url?, data? })
+ * Send an app-scoped push notification through the hub. `audience` defaults to
+ * "all"; pass a member id or member-id array for private/targeted items.
+ * Returns the hub response JSON (`{ web, expo }`) or null on failure.
+ */
+export async function sendHubNotification({ title, body, audience = "all", url, data } = {}) {
+  if (!title || !body) throw new Error("sendHubNotification requires title and body");
+  const payloadData = data && typeof data === "object" && !Array.isArray(data)
+    ? { ...data }
+    : data;
+  if (payloadData && typeof payloadData.url === "string") {
+    payloadData.url = normalizeHubUrl(payloadData.url);
+  }
+  try {
+    const res = await fetch(window.__NOTIFY_URL ?? "/api/notifications/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title,
+        body,
+        audience,
+        url: normalizeHubUrl(url),
+        data: payloadData,
+      }),
+    });
+    return await res.json().catch(() => null);
+  } catch {
+    return null;
+  }
+}
+
 // ── Cross-app writes ───────────────────────────────────────────────────────────
 /**
  * crossWrite(targetAppId, key, ops)

@@ -104,22 +104,28 @@ async function loadMembers() {
 ## Notifications
 
 ```js
-async function notify(title, body) {
-  await fetch("/api/notifications/send", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ title, body, url: `/run/${APP_ID}` }),
-  }).catch(() => {});
-}
+import { sendHubNotification, hubAppUrl } from "/hub-sdk.js";
+
+await sendHubNotification({
+  title: "New event",
+  body: "Please RSVP",
+  audience: ["member-id-1", "member-id-2"],
+  url: hubAppUrl(APP_ID, { eventId }),
+});
 ```
 
-Always `.catch(() => {})` — notifications are best-effort.
+Prefer `sendHubNotification` from `/hub-sdk.js` over hand-written `fetch(window.__NOTIFY_URL...)`
+calls. It sends through the app-scoped hub endpoint, defaults click targets to `/open/{APP_ID}`,
+and normalizes old `/run/{APP_ID}` URLs so Safari and other browsers open the app in the hub shell
+instead of the isolated runtime origin. It returns the hub response JSON (`{ web, expo }`) or `null`
+on network failure, so apps may show delivery diagnostics when useful. Notifications are still
+best-effort; don't make core data writes depend on them succeeding.
 
 **The default `audience` is `"all"` — the whole household.** Never send the contents of a
 restricted item (a private/role/board-only channel message, an adults-only note, etc.)
 through the plain `notify` helper: every member's device receives the preview, even members
 who can't open the item. To target specific people, pass an explicit member-id list:
-`{ title, body, audience: ["member-id-1", "member-id-2"] }`. But you usually can't compute
+`audience: ["member-id-1", "member-id-2"]`. But you usually can't compute
 "who follows this channel" on the client (that data is `owner_only`) — use
 `subscription_notify` below.
 

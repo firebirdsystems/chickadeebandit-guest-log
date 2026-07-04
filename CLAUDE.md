@@ -1068,6 +1068,12 @@ they reference via foreign key:
 - `INSERT`: forces `writer_column` to the caller, and rejects the insert
   (`403`) if the referenced parent row isn't visible to the caller (e.g.
   can't vote/comment/log on something you can't see).
+- Add `"insert_only_by_parent_column_member": "current_turn_member_id"` for
+  turn-scoped child rows: the referenced parent row must have that member-id
+  column equal to the caller before any app-originated `INSERT` is accepted.
+  This is stricter than visibility and is enforced even for adults/privileged
+  callers, so a player cannot insert a move/question/guess when it is not their
+  turn by POSTing raw SQL to `/api/db`.
 - `UPDATE`/`DELETE`: privileged callers (per the parent policy's
   `bypass_group_setting`/adult-bypass) are unrestricted (e.g. cascade-delete
   when the parent is deleted); everyone else is restricted to rows where
@@ -1084,6 +1090,14 @@ officer-elections-style "any visible member can check off a group streak"
 their own violations; board members see/log on any violation); document-library
 `document_versions` inherits from `documents` with `insert_privileged_only: true`
 (only the board may upload new versions).
+
+Turn-based game pattern: put `current_turn_member_id` on the parent game/round
+table, make moves/questions/guesses an `inherit_visibility` child table, and set
+`insert_only_by_parent_column_member: "current_turn_member_id"` on that child
+policy. This covers async turn rotation for Word Game / 20 Questions / Draw &
+Guess-style apps without a bespoke server endpoint per game. Pair it with
+`unique_per_member` when the child table also needs one attributed row per round
+or turn.
 
 ### Choosing a policy kind
 
@@ -1102,6 +1116,7 @@ their own violations; board members see/log on any violation); document-library
 | Table-wide, adults-only data (account balances, fund totals) | `adult_only` |
 | Shared between exactly two partnered members | `couple_scoped` |
 | Votes/comments/logs/check-offs whose visibility should match a parent record | `inherit_visibility` |
+| Turn-based child rows where only the current player may INSERT (moves, questions, guesses) | `inherit_visibility` with `insert_only_by_parent_column_member: "current_turn_member_id"` |
 | Anonymous data with no per-row ownership at all (e.g. cast ballots, raw anonymous responses) | `endpoint_only` with `read:"none"` — pair with a receipt table under `owner_only` + `adults_bypass:false` + `member_can_update:false` + `endpoint_writes_only:true`; use `anonymous_responses` or `anonymous_ballot` manifest mechanisms to write both atomically |
 | Everyone can read, but only a specific group may INSERT (e.g. board-managed docs) | `owner_or_visibility` with `everyone_values`, `write_owner_only: true`, and `insert_privileged_only: true` |
 | Child rows where only a privileged group may create them (e.g. document versions) | `inherit_visibility` with `insert_privileged_only: true` |

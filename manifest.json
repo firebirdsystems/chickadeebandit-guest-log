@@ -1,47 +1,76 @@
 {
-  "id": "potluck",
-  "name": "Potluck",
+  "id": "guest-log",
+  "name": "Guest Log",
   "version": "1.0.0",
-  "description": "Create gatherings with dish slots and let members claim, swap, and release dishes without overbooking a category.",
+  "description": "A digital sign-in / sign-out sheet for visitors, deliveries, and overnight guests. Members log their own guests; leadership sees the full log and approves overnight stays.",
   "entrypoint": "index.html",
   "runtime": "static",
-  "category": "family",
-  "tags": ["food", "events", "potluck", "slot-claims"],
+  "category": "organization",
+  "tags": ["org", "guests", "sign-in", "front-desk", "visitors", "overnight"],
   "data_access": {
-    "reads": ["family.members"],
-    "writes": ["family.members"]
+    "reads": ["family.members", "family.groups"],
+    "writes": []
   },
   "permissions": {
     "default_audience": "everyone",
     "requires_approval": false
   },
   "storage": "db",
+  "db_plaintext_columns": ["visit_type"],
   "row_policies": {
-    "events": {
-      "kind": "adult_writable"
-    },
-    "slots": {
-      "kind": "adult_writable"
-    },
-    "claims": {
+    "visits": {
       "kind": "owner_only",
-      "member_column": "member_id",
-      "adults_bypass": true,
-      "unique_per_member": {
-        "member_column": "member_id",
-        "scope_columns": ["event_id", "slot_id"]
+      "member_column": "host_id",
+      "adults_bypass": false,
+      "privileged_groups": [
+        { "settings_table": "settings", "settings_key": "leadership_group_id" }
+      ]
+    },
+    "approvals": {
+      "kind": "inherit_visibility",
+      "fk_column": "visit_id",
+      "parent_table": "visits",
+      "writer_column": "decided_by",
+      "insert_privileged_only": true,
+      "endpoint_writes_only": true
+    },
+    "settings": {
+      "kind": "app_config"
+    }
+  },
+  "admin_config": {
+    "settings_table": "settings",
+    "keys": ["leadership_group_id"]
+  },
+  "append_only_records": {
+    "approvals": {
+      "table": "approvals",
+      "parent_table": "visits",
+      "parent_fk_column": "visit_id",
+      "allowed_columns": ["visit_id", "decision", "note"],
+      "writer_column": "decided_by",
+      "created_at_column": "decided_at",
+      "write_acl": {
+        "require_group_setting": { "settings_table": "settings", "settings_key": "leadership_group_id" }
+      },
+      "allowed_values": {
+        "decision": ["approved", "denied"]
+      },
+      "max_text_lengths": {
+        "visit_id": 120,
+        "decision": 20,
+        "note": 1000
       }
     }
   },
-  "publishes": ["potluck.event_created", "potluck.slot_claimed", "potluck.slot_released"],
-  "nav": { "label": "Potluck" },
+  "nav": { "label": "Guest Log" },
   "resource_limits": {
     "max_db_bytes": 52428800
   },
-  "icon": "🍽️",
+  "icon": "📖",
   "ai_access": {
     "allowed": true,
     "mode": "read",
-    "db_exports": ["upcoming_potlucks", "claim_summary"]
+    "db_exports": ["recent_visits", "checked_in"]
   }
 }

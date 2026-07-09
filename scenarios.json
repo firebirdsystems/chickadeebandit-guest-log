@@ -1,0 +1,27 @@
+{
+  "scenarios": [
+    {
+      "name": "a host's visit log is private even from other adults",
+      "members": { "host": "adult", "other": "adult" },
+      "steps": [
+        {
+          "action": "seedRaw",
+          "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, host_id, host_name, status, check_in_at, created_at, updated_at) VALUES (?, ?, 'visitor', ?, ?, 'checked_in', ?, ?, ?)",
+          "params": ["v1", "Aunt Carol", "{{host}}", "Host", "2026-01-01T10:00:00Z", "2026-01-01T10:00:00Z", "2026-01-01T10:00:00Z"]
+        },
+        {
+          "action": "db",
+          "as": "host",
+          "sql": "SELECT id, guest_name FROM app_guest_log__visits",
+          "expect": { "status": 200, "rowCount": 1 }
+        },
+        {
+          "action": "db",
+          "as": "other",
+          "sql": "SELECT id, guest_name FROM app_guest_log__visits",
+          "expect": { "status": 200, "rowCount": 0 }
+        }
+      ]
+    }
+  ]
+}

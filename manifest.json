@@ -1,7 +1,7 @@
 {
   "id": "guest-log",
   "name": "Guest Log",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A digital sign-in / sign-out sheet for visitors, deliveries, and overnight guests. Members log their own guests; leadership sees the full log and approves overnight stays.",
   "entrypoint": "index.html",
   "runtime": "static",
@@ -24,7 +24,12 @@
       "adults_bypass": false,
       "privileged_groups": [
         { "settings_table": "settings", "settings_key": "leadership_group_id" }
-      ]
+      ],
+      "retain_days": {
+        "default": 90,
+        "timestamp_column": "check_in_at",
+        "dependent_tables": [{ "table": "approvals", "foreign_key": "visit_id" }]
+      }
     },
     "approvals": {
       "kind": "inherit_visibility",

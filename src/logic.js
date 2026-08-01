@@ -50,3 +50,13 @@ export function canManageVisit(visit, member, groups, leadershipGroupId) {
   if (visit.host_id === member.id) return true;
   return isLeadership(member, groups, leadershipGroupId);
 }
+
+/**
+ * Fields the in-app search matches against (see hub-sdk `searchMatch`).
+ * Host and purpose are searchable as well as the guest's name: a
+ * gate log is queried as "who signed in the plumber" at least as often
+ * as by the visitor's own name.
+ */
+export function searchableFields(item) {
+  return [item.guest_name, item.purpose, item.host_name, item.visit_type];
+}

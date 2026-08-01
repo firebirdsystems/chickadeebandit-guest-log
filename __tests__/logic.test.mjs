@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
   visitTypeMeta, isLeadership, latestApproval, approvalState,
-  isOnSite, canManageVisit,
+  isOnSite, canManageVisit, searchableFields,
 } from "../src/logic.js";
 import { testPrivilegedGateContract } from "./helpers/privileged-gate.mjs";
 
@@ -59,4 +59,14 @@ testPrivilegedGateContract("isLeadership", isLeadership, {
   outsider: { id: "m-other", role: "adult" },
   groups:   GROUPS,
   groupId:  "g-lead",
+});
+
+describe("searchableFields", () => {
+  it("matches on host and purpose, not just the guest name", () => {
+    const fields = searchableFields({
+      guest_name: "Jo Diaz", purpose: "boiler service", host_name: "Ada", visit_type: "day",
+    });
+    expect(fields).toContain("boiler service");
+    expect(fields).toContain("Ada");
+  });
 });

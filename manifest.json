@@ -69,6 +69,25 @@
       }
     }
   },
+  "member_references": {
+    "visits": {
+      "column": "host_id",
+      "on_removed": "delete",
+      "dependent_tables": [
+        {
+          "table": "approvals",
+          "foreign_key": "visit_id"
+        }
+      ]
+    },
+    "approvals": { "column": "decided_by", "on_removed": "keep" }
+  },
+  "delete_cascades": {
+    "visits": [
+      { "table": "approvals", "foreign_key": "visit_id" }
+    ]
+  },
+  "kiosk": "never",
   "nav": { "label": "Guest Log" },
   "resource_limits": {
     "max_db_bytes": 52428800

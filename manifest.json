@@ -17,7 +17,63 @@
     "requires_approval": false
   },
   "storage": "db",
-  "db_plaintext_columns": ["visit_type"],
+  "automation_actions": {
+    "log_visit": {
+      "title": "Sign a guest in",
+      "description": "Open a visit record when another app's event fires - a booked amenity slot, an approved contractor, a delivery announced elsewhere.",
+      "params": {
+        "host_id": {
+          "type": "member",
+          "label": "Host",
+          "required": true
+        },
+        "guest_name": {
+          "type": "text",
+          "label": "Guest name",
+          "required": true
+        },
+        "visit_type": {
+          "type": "text",
+          "label": "Visit type",
+          "default": "visitor",
+          "options": ["visitor", "delivery", "overnight"]
+        },
+        "purpose": {
+          "type": "text",
+          "label": "Purpose",
+          "default": ""
+        }
+      },
+      "dedupe": {
+        "table": "visits",
+        "column": "source_event_id"
+      },
+      "steps": [
+        {
+          "op": "insert",
+          "table": "visits",
+          "values": {
+            "id": "$uuid",
+            "guest_name": ":guest_name",
+            "visit_type": ":visit_type",
+            "purpose": ":purpose",
+            "host_id": ":host_id",
+            "host_name": "Automation",
+            "check_in_at": "$now",
+            "created_at": "$now",
+            "updated_at": "$now",
+            "source_event_id": "$event_id"
+          }
+        }
+      ]
+    }
+  },
+  "publishes": ["guest.checked_in", "guest.checked_out"],
+  "publish_acls": {
+    "guest.checked_in": { "require_role": "member" },
+    "guest.checked_out": { "require_role": "member" }
+  },
+  "db_plaintext_columns": ["visit_type", "status"],
   "row_policies": {
     "visits": {
       "kind": "owner_only",
@@ -89,6 +145,21 @@
   },
   "kiosk": "never",
   "nav": { "label": "Guest Log" },
+  "agenda": {
+    "kind": "event",
+    "label": "Guest",
+    "source": {
+      "kind": "sql",
+      "query": "SELECT id AS id, guest_name AS title, visit_type AS subtitle, host_id AS member_id, expected_out_at AS when_at FROM app_guest_log__visits WHERE check_out_at IS NULL AND expected_out_at IS NOT NULL AND substr(expected_out_at, 1, 10) = :today LIMIT 20"
+    }
+  },
+  "glance": {
+    "source": {
+      "kind": "sql",
+      "query": "SELECT COUNT(*) AS n FROM app_guest_log__visits WHERE check_out_at IS NULL LIMIT 1"
+    },
+    "display": { "template": "badge", "count": "n", "label": "on site", "severity": "info" }
+  },
   "resource_limits": {
     "max_db_bytes": 52428800
   },

@@ -128,6 +128,7 @@ const DB               = window.__DB_URL            ?? "";
 const ADMIN_CONFIG_URL = window.__ADMIN_CONFIG_URL  ?? "";
 const APP_ID           = window.__APP_ID            ?? "guest-log";
 const APPEND_RECORD    = window.__APPEND_RECORD_URL ?? `/run/${APP_ID}/api/append-record`;
+const EVENTS           = window.__EVENTS_URL        ?? "";
 const ME       = window.__CURRENT_MEMBER ?? null;
 const IS_ADMIN = !!window.__IS_ADMIN;
 
@@ -160,6 +161,19 @@ async function db(sql, params = []) {
   const json = await res.json();
   if (json.error) throw new Error(json.error);
   return json;
+}
+
+async function publishEvent(type, subjectId, payload = {}) {
+  if (!EVENTS) return;
+  try {
+    await fetch(EVENTS, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ type, subject_id: subjectId, payload }),
+    });
+  } catch {
+    // Event publishing must not block signing a guest in or out at the desk.
+  }
 }
 
 async function appendRecord(name, data) {
@@ -274,6 +288,14 @@ async function submitVisitForm(form) {
       );
     }
     visits = [visit, ...visits];
+    // The payload deliberately omits guest_name and purpose. Visit rows are
+    // owner_only (plus the leadership group), so putting a visitor's name on
+    // the household-wide bus would route around that policy.
+    await publishEvent("guest.checked_in", visit.id, {
+      visit_type: visit.visit_type,
+      host_id: visit.host_id,
+      expected_out_at: visit.expected_out_at,
+    });
     tab = "onsite";
     closeModal();
     showNotice("Guest signed in.");
@@ -287,6 +309,11 @@ async function checkOut(visitId) {
   try {
     if (DB) await db(`UPDATE app_guest_log__visits SET status = 'checked_out', check_out_at = ?, updated_at = ? WHERE id = ?`, [out, out, visitId]);
     visits = visits.map(x => x.id === visitId ? { ...x, status: "checked_out", check_out_at: out } : x);
+    await publishEvent("guest.checked_out", visitId, {
+      visit_type: v.visit_type,
+      host_id: v.host_id,
+      check_out_at: out,
+    });
     showNotice("Guest checked out.");
   } catch (e) { showError(e.message); }
 }

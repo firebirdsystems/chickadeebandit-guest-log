@@ -17,6 +17,11 @@
     "requires_approval": false
   },
   "storage": "db",
+  "preload": {
+    "settings": {"sql": "SELECT key, value FROM app_guest_log__settings WHERE key = 'leadership_group_id'"},
+    "visits": {"sql": "SELECT * FROM app_guest_log__visits ORDER BY check_in_at DESC LIMIT 500"},
+    "approvals": {"sql": "SELECT * FROM app_guest_log__approvals ORDER BY decided_at ASC"}
+  },
   "automation_actions": {
     "log_visit": {
       "title": "Sign a guest in",

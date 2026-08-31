@@ -474,14 +474,14 @@ function renderVisit(visit) {
 
   const actions = [];
   if (showApproval) {
-    actions.push(`<button class="btn btn-good btn-sm" data-approve="${esc(visit.id)}">Approve overnight</button>`);
+    actions.push(`<button class="btn btn-good btn-sm" data-testid="approve-overnight" data-visit-id="${esc(visit.id)}" data-approve="${esc(visit.id)}">Approve overnight</button>`);
     actions.push(`<button class="btn btn-danger btn-sm" data-deny="${esc(visit.id)}">Deny</button>`);
   }
   if (onsite && manage) actions.push(`<button class="btn btn-ghost btn-sm" data-checkout="${esc(visit.id)}">Check out</button>`);
   if (manage) actions.push(`<button class="btn btn-ghost btn-sm" data-delete="${esc(visit.id)}">Delete</button>`);
 
   return `
-    <article class="card">
+    <article class="card" data-testid="visit-card" data-visit-id="${esc(visit.id)}" data-visit-type="${esc(visit.visit_type)}">
       <div class="visit-head">
         <div class="row" style="align-items:flex-start;gap:10px">
           <span style="font-size:1.3rem">${esc(meta.icon)}</span>
@@ -544,9 +544,9 @@ function render() {
     ${renderMessages()}
     ${leadershipNotConfigured}
     <div class="tabs">
-      <button class="tab ${tab === "onsite" ? "active" : ""}" data-tab="onsite">On site (${onsite.length})</button>
-      ${isLeadership() ? `<button class="tab ${tab === "pending" ? "active" : ""}" data-tab="pending">Overnight (${pending.length})</button>` : ""}
-      <button class="tab ${tab === "history" ? "active" : ""}" data-tab="history">History (${history.length})</button>
+      <button class="tab ${tab === "onsite" ? "active" : ""}" data-testid="tab" data-tab-id="onsite" data-tab="onsite">On site (${onsite.length})</button>
+      ${isLeadership() ? `<button class="tab ${tab === "pending" ? "active" : ""}" data-testid="tab" data-tab-id="pending" data-tab="pending">Overnight (${pending.length})</button>` : ""}
+      <button class="tab ${tab === "history" ? "active" : ""}" data-testid="tab" data-tab-id="history" data-tab="history">History (${history.length})</button>
     </div>
     <div class="section-head">
       <h2>${tab === "onsite" ? "Currently on site" : tab === "pending" ? "Overnight — awaiting approval" : "Past visits"}</h2>

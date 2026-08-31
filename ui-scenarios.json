@@ -1,0 +1,116 @@
+{
+  "scenarios": [
+    {
+      "name": "the full house log and the overnight approval control follow the configured leadership group",
+      "members": {
+        "viewer": "adult",
+        "other": "adult"
+      },
+      "steps": [
+        {
+          "action": "seedGroup",
+          "group": "social",
+          "name": "Social Committee",
+          "members": [
+            "other"
+          ]
+        },
+        {
+          "action": "seedGroup",
+          "group": "lead",
+          "name": "House Leadership",
+          "members": [
+            "viewer"
+          ]
+        },
+        {
+          "action": "seedRaw",
+          "sql": "INSERT INTO app_guest_log__settings (key, value) VALUES ('leadership_group_id', ?)",
+          "params": [
+            "{{group:social}}"
+          ]
+        },
+        {
+          "action": "seedRaw",
+          "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, updated_at) VALUES (?, ?, 'visitor', ?, ?, ?, 'checked_in', datetime('now'), datetime('now'), datetime('now'))",
+          "params": [
+            "ui-mine",
+            "Dana Delivery",
+            "Family visit",
+            "{{viewer}}",
+            "Host name"
+          ]
+        },
+        {
+          "action": "seedRaw",
+          "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, updated_at) VALUES (?, ?, 'overnight', ?, ?, ?, 'checked_in', datetime('now'), datetime('now'), datetime('now'))",
+          "params": [
+            "ui-theirs",
+            "Robin Overnight",
+            "Family visit",
+            "{{other}}",
+            "Host name"
+          ]
+        },
+        {
+          "action": "open",
+          "as": "viewer"
+        },
+        {
+          "action": "expectVisible",
+          "as": "viewer",
+          "selector": "[data-testid=\"visit-card\"][data-visit-id=\"ui-mine\"]"
+        },
+        {
+          "action": "expectCount",
+          "as": "viewer",
+          "selector": "[data-testid=\"tab\"][data-tab-id=\"pending\"]",
+          "count": 0
+        },
+        {
+          "action": "expectCount",
+          "as": "viewer",
+          "selector": "[data-testid=\"visit-card\"]",
+          "count": 1
+        },
+        {
+          "action": "expectNoText",
+          "as": "viewer",
+          "text": "Robin Overnight"
+        },
+        {
+          "action": "seedRaw",
+          "sql": "UPDATE app_guest_log__settings SET value = ? WHERE key = 'leadership_group_id'",
+          "params": [
+            "{{group:lead}}"
+          ]
+        },
+        {
+          "action": "reload",
+          "as": "viewer"
+        },
+        {
+          "action": "expectVisible",
+          "as": "viewer",
+          "selector": "[data-testid=\"visit-card\"][data-visit-id=\"ui-mine\"]"
+        },
+        {
+          "action": "expectVisible",
+          "as": "viewer",
+          "selector": "[data-testid=\"tab\"][data-tab-id=\"pending\"]"
+        },
+        {
+          "action": "expectCount",
+          "as": "viewer",
+          "selector": "[data-testid=\"visit-card\"]",
+          "count": 2
+        },
+        {
+          "action": "expectVisible",
+          "as": "viewer",
+          "selector": "[data-testid=\"approve-overnight\"][data-visit-id=\"ui-theirs\"]"
+        }
+      ]
+    }
+  ]
+}

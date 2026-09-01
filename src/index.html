@@ -234,7 +234,14 @@ async function loadData() {
   // Row policies scope `visits` to the caller (own rows, or all for leadership).
   const [visitRows, approvalRows] = await Promise.all([
     db(`SELECT * FROM app_guest_log__visits ORDER BY check_in_at DESC LIMIT 500`),
-    db(`SELECT * FROM app_guest_log__approvals ORDER BY decided_at ASC`),
+    // Joined to visits so the read covers only visits that can actually be
+    // shown. A JOIN, not IN (SELECT …): `visits` is owner_only, and the
+    // rewriter fails closed on a governed table named only inside a subquery.
+    // The limit is deliberately double the 500-visit window — a missing
+    // approval row reads as "pending", so truncating decisions would flip a
+    // decided visit's pill back to pending. One visit can hold several
+    // decisions, so the slack absorbs that without ever reaching the boundary.
+    db(`SELECT a.* FROM app_guest_log__approvals a JOIN app_guest_log__visits v ON v.id = a.visit_id ORDER BY v.check_in_at DESC, a.decided_at ASC LIMIT 1000`),
   ]);
   visits = visitRows.rows;
   approvals = approvalRows.rows;

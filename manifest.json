@@ -20,7 +20,7 @@
   "preload": {
     "settings": {"sql": "SELECT key, value FROM app_guest_log__settings WHERE key = 'leadership_group_id'"},
     "visits": {"sql": "SELECT * FROM app_guest_log__visits ORDER BY check_in_at DESC LIMIT 500"},
-    "approvals": {"sql": "SELECT * FROM app_guest_log__approvals ORDER BY decided_at ASC"}
+    "approvals": {"sql": "SELECT a.* FROM app_guest_log__approvals a JOIN app_guest_log__visits v ON v.id = a.visit_id ORDER BY v.check_in_at DESC, a.decided_at ASC LIMIT 1000"}
   },
   "automation_actions": {
     "log_visit": {

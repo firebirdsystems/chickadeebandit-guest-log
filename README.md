@@ -1,5 +1,7 @@
 # Guest Log
 
+A [Chickadee Bandit](https://chickadeebandit.com/app-library/guest-log) app.
+
 A digital sign-in / sign-out sheet for visitors, deliveries, and overnight guests —
 for shared houses, fraternities/sororities, and orgs with a front-desk or guest policy.
 

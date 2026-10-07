@@ -2,13 +2,13 @@ import { isAdult } from "./shared.js";
 export { isAdult };
 
 export const VISIT_TYPES = [
-  { value: "visitor",   label: "Visitor",   icon: "👋" },
-  { value: "delivery",  label: "Delivery",  icon: "📦" },
-  { value: "overnight", label: "Overnight", icon: "🛏️" },
+  { value: "visitor",   label: "Visitor",   icon: "👋", glyph: "door" },
+  { value: "delivery",  label: "Delivery",  icon: "📦", glyph: "box" },
+  { value: "overnight", label: "Overnight", icon: "🛏️", glyph: "moon" },
 ];
 
 export function visitTypeMeta(type) {
-  return VISIT_TYPES.find((t) => t.value === type) ?? { value: type, label: type, icon: "•" };
+  return VISIT_TYPES.find((t) => t.value === type) ?? { value: type, label: type, icon: "•", glyph: "dot" };
 }
 
 // ── Leadership gate ────────────────────────────────────────────────────────────

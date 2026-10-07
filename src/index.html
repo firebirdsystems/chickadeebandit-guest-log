@@ -117,7 +117,7 @@
 </div>
 
 <script type="module">
-import { esc, memberColor, initial, hubConfirm, searchMatch } from "/hub-sdk.js";
+import { esc, memberColor, initial, hubConfirm, searchMatch, glyph } from "/hub-sdk.js";
 import {
   VISIT_TYPES, visitTypeMeta, isLeadership as _isLeadership,
   latestApproval, approvalState, isOnSite, canManageVisit as _canManageVisit, searchableFields,
@@ -423,12 +423,12 @@ window.openSettingsModal = function () {
         <option value="" ${!settings.leadership_group_id ? "selected" : ""}>— No leadership configured —</option>
         ${opts}
       </select>
-      <span class="muted tiny">${!leadershipConfigured() ? "⚠️ Pick a leadership group to enable the full log view and overnight approvals — approvals are disabled until one is set." : "Members of this group see the full log and approve overnight stays."}</span>
+      <span class="muted tiny">${!leadershipConfigured() ? `${glyph("warning")} Pick a leadership group to enable the full log view and overnight approvals — approvals are disabled until one is set.` : "Members of this group see the full log and approve overnight stays."}</span>
     </div>` : `
     <p class="muted">Leadership group: <strong>${settings.leadership_group_id ? esc(groups.find(g => g.id === settings.leadership_group_id)?.name ?? settings.leadership_group_id) : "— none —"}</strong></p>
     <p class="tiny muted" style="margin-top:8px">Only a hub admin can change this.</p>`;
   openModal(`
-    <h3>⚙️ Guest Log settings</h3>
+    <h3>${glyph("gear")} Guest Log settings</h3>
     ${controls}
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal()">Close</button>
@@ -467,7 +467,7 @@ function fmtWhen(iso) {
 function approvalPill(visit) {
   if (visit.visit_type !== "overnight") return "";
   const s = approvalState(visit, approvals);
-  if (s === "approved") return `<span class="pill good">Overnight ✓</span>`;
+  if (s === "approved") return `<span class="pill good">Overnight ${glyph("tick", { accent: "currentColor" })}</span>`;
   if (s === "denied") return `<span class="pill bad">Overnight denied</span>`;
   return `<span class="pill warn">Overnight — pending</span>`;
 }
@@ -491,7 +491,7 @@ function renderVisit(visit) {
     <article class="card" data-testid="visit-card" data-visit-id="${esc(visit.id)}" data-visit-type="${esc(visit.visit_type)}">
       <div class="visit-head">
         <div class="row" style="align-items:flex-start;gap:10px">
-          <span style="font-size:1.3rem">${esc(meta.icon)}</span>
+          <span style="font-size:1.3rem">${glyph(meta.glyph)}</span>
           <div>
             <div class="guest-name">${esc(visit.guest_name || "Guest")}</div>
             <div class="visit-meta">
@@ -540,7 +540,7 @@ function render() {
   root.innerHTML = `
     <div class="topbar">
       <div>
-        <h1>📖 Guest Log</h1>
+        <h1>${glyph("book-open")} Guest Log</h1>
         <p class="muted tiny">${esc(scopeNote)}</p>
       </div>
       <div class="row" style="justify-content:flex-end">

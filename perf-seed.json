@@ -1,0 +1,1408 @@
+{
+  "groups": [
+    {
+      "key": "lead",
+      "name": "House Leadership",
+      "members": [
+        "{{me}}",
+        "{{partner}}"
+      ]
+    }
+  ],
+  "seed": [
+    {
+      "sql": "INSERT INTO app_guest_log__settings (key, value) VALUES (?, ?)",
+      "params": [
+        "leadership_group_id",
+        "{{group:lead}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-3 hours'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-3 hours'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-3 hours'))",
+      "params": [
+        "perf-visit-000",
+        "The Patels",
+        "visitor",
+        "Study group",
+        "{{me}}",
+        "Perf Admin",
+        "checked_in"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-24 hours','-13 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-24 hours','-13 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-22 hours','-5 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-22 hours','-5 minutes'))",
+      "params": [
+        "perf-visit-001",
+        "Dana Whitfield",
+        "visitor",
+        "Dinner",
+        "{{adult2}}",
+        "Sam Rivera",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-46 hours','-26 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-46 hours','-26 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-46 hours'))",
+      "params": [
+        "perf-visit-002",
+        "Piano teacher",
+        "delivery",
+        "Furniture delivery",
+        "{{child2}}",
+        "Riley Kim",
+        "checked_in"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-62 hours','-39 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-62 hours','-39 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-60 hours','-15 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-60 hours','-15 minutes'))",
+      "params": [
+        "perf-visit-003",
+        "Cousin Leo",
+        "visitor",
+        "{{partner}}",
+        "Jordan Lee",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, updated_at, expected_out_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-84 hours','-52 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-84 hours','-52 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-84 hours'), ?)",
+      "params": [
+        "perf-visit-004",
+        "Parcel courier",
+        "overnight",
+        "Weekend stay",
+        "{{child}}",
+        "Taylor Kim",
+        "checked_in",
+        "{{date:-1}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__approvals (id, visit_id, decision, decided_by, decided_at) VALUES (?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-83 hours'))",
+      "params": [
+        "perf-appr-004-a",
+        "perf-visit-004",
+        "approved",
+        "{{me}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-100 hours','-5 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-100 hours','-5 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-100 hours','-25 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-100 hours','-25 minutes'))",
+      "params": [
+        "perf-visit-005",
+        "Coach Bennett",
+        "delivery",
+        "Groceries",
+        "{{partner}}",
+        "Jordan Lee",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-122 hours','-18 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-122 hours','-18 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-122 hours'))",
+      "params": [
+        "perf-visit-006",
+        "Plumber (Ridge Plumbing)",
+        "visitor",
+        "Helping with the garden",
+        "{{child}}",
+        "Taylor Kim",
+        "checked_in"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, updated_at, expected_out_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-143 hours','-31 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-143 hours','-31 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-143 hours'), ?)",
+      "params": [
+        "perf-visit-007",
+        "The Patels",
+        "overnight",
+        "Staying over after the game",
+        "{{me}}",
+        "Perf Admin",
+        "checked_in",
+        "{{date:-3}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-160 hours','-44 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-160 hours','-44 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-160 hours'))",
+      "params": [
+        "perf-visit-008",
+        "Dana Whitfield",
+        "visitor",
+        "Dinner",
+        "{{adult2}}",
+        "Sam Rivera",
+        "checked_in"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-181 hours','-57 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-181 hours','-57 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-179 hours','-45 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-179 hours','-45 minutes'))",
+      "params": [
+        "perf-visit-009",
+        "Piano teacher",
+        "visitor",
+        "Play date",
+        "{{child2}}",
+        "Riley Kim",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-198 hours','-10 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-198 hours','-10 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-198 hours'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-198 hours'))",
+      "params": [
+        "perf-visit-010",
+        "Cousin Leo",
+        "delivery",
+        "Furniture delivery",
+        "{{adult2}}",
+        "Sam Rivera",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-219 hours','-23 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-219 hours','-23 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-217 hours','-5 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-217 hours','-5 minutes'))",
+      "params": [
+        "perf-visit-011",
+        "Parcel courier",
+        "visitor",
+        "Piano lesson",
+        "{{child2}}",
+        "Riley Kim",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, updated_at, expected_out_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-241 hours','-36 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-241 hours','-36 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-241 hours'), ?)",
+      "params": [
+        "perf-visit-012",
+        "Coach Bennett",
+        "overnight",
+        "Weekend stay",
+        "{{partner}}",
+        "Jordan Lee",
+        "checked_in",
+        "{{date:-8}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__approvals (id, visit_id, decision, decided_by, decided_at, note) VALUES (?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-240 hours'), ?)",
+      "params": [
+        "perf-appr-012-a",
+        "perf-visit-012",
+        "approved",
+        "{{me}}",
+        "Quiet hours after ten, please."
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-257 hours','-49 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-257 hours','-49 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-257 hours','-15 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-257 hours','-15 minutes'))",
+      "params": [
+        "perf-visit-013",
+        "Plumber (Ridge Plumbing)",
+        "delivery",
+        "Groceries",
+        "{{child}}",
+        "Taylor Kim",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-279 hours','-2 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-279 hours','-2 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-277 hours','-20 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-277 hours','-20 minutes'))",
+      "params": [
+        "perf-visit-014",
+        "The Patels",
+        "visitor",
+        "{{me}}",
+        "Perf Admin",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at, expected_out_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-295 hours','-15 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-295 hours','-15 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-265 hours','-25 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-265 hours','-25 minutes'), ?)",
+      "params": [
+        "perf-visit-015",
+        "Dana Whitfield",
+        "overnight",
+        "Staying over after the game",
+        "{{child}}",
+        "Taylor Kim",
+        "checked_out",
+        "{{date:-10}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__approvals (id, visit_id, decision, decided_by, decided_at) VALUES (?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-294 hours'))",
+      "params": [
+        "perf-appr-015-a",
+        "perf-visit-015",
+        "approved",
+        "{{me}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-317 hours','-28 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-317 hours','-28 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-315 hours','-30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-315 hours','-30 minutes'))",
+      "params": [
+        "perf-visit-016",
+        "Piano teacher",
+        "visitor",
+        "Play date",
+        "{{me}}",
+        "Perf Admin",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-338 hours','-41 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-338 hours','-41 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-336 hours','-35 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-336 hours','-35 minutes'))",
+      "params": [
+        "perf-visit-017",
+        "Cousin Leo",
+        "visitor",
+        "Dropping by",
+        "{{adult2}}",
+        "Sam Rivera",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-355 hours','-54 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-355 hours','-54 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-355 hours','-40 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-355 hours','-40 minutes'))",
+      "params": [
+        "perf-visit-018",
+        "Parcel courier",
+        "delivery",
+        "Furniture delivery",
+        "{{child2}}",
+        "Riley Kim",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-376 hours','-7 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-376 hours','-7 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-374 hours','-45 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-374 hours','-45 minutes'))",
+      "params": [
+        "perf-visit-019",
+        "Coach Bennett",
+        "visitor",
+        "Book club night",
+        "{{partner}}",
+        "Jordan Lee",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at, expected_out_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-393 hours','-20 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-393 hours','-20 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-363 hours'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-363 hours'), ?)",
+      "params": [
+        "perf-visit-020",
+        "Plumber (Ridge Plumbing)",
+        "overnight",
+        "Weekend stay",
+        "{{child2}}",
+        "Riley Kim",
+        "checked_out",
+        "{{date:-14}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__approvals (id, visit_id, decision, note, decided_by, decided_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-392 hours'))",
+      "params": [
+        "perf-appr-020-a",
+        "perf-visit-020",
+        "denied",
+        "Too many guests that weekend, please ask again.",
+        "{{me}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__approvals (id, visit_id, decision, note, decided_by, decided_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-391 hours'))",
+      "params": [
+        "perf-appr-020-b",
+        "perf-visit-020",
+        "approved",
+        "Sorted out, fine to stay.",
+        "{{me}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-414 hours','-33 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-414 hours','-33 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-414 hours','-5 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-414 hours','-5 minutes'))",
+      "params": [
+        "perf-visit-021",
+        "The Patels",
+        "delivery",
+        "Groceries",
+        "{{partner}}",
+        "Jordan Lee",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-436 hours','-46 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-436 hours','-46 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-434 hours','-10 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-434 hours','-10 minutes'))",
+      "params": [
+        "perf-visit-022",
+        "Dana Whitfield",
+        "visitor",
+        "Dinner",
+        "{{child}}",
+        "Taylor Kim",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at, expected_out_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-452 hours','-59 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-452 hours','-59 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-422 hours','-15 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-422 hours','-15 minutes'), ?)",
+      "params": [
+        "perf-visit-023",
+        "Piano teacher",
+        "overnight",
+        "Staying over after the game",
+        "{{me}}",
+        "Perf Admin",
+        "checked_out",
+        "{{date:-16}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__approvals (id, visit_id, decision, decided_by, decided_at, note) VALUES (?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-451 hours'), ?)",
+      "params": [
+        "perf-appr-023-a",
+        "perf-visit-023",
+        "approved",
+        "{{partner}}",
+        "Quiet hours after ten, please."
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-474 hours','-12 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-474 hours','-12 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-472 hours','-20 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-472 hours','-20 minutes'))",
+      "params": [
+        "perf-visit-024",
+        "Cousin Leo",
+        "visitor",
+        "Dropping by",
+        "{{adult2}}",
+        "Sam Rivera",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-490 hours','-25 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-490 hours','-25 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-488 hours','-25 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-488 hours','-25 minutes'))",
+      "params": [
+        "perf-visit-025",
+        "Parcel courier",
+        "visitor",
+        "{{me}}",
+        "Perf Admin",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-512 hours','-38 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-512 hours','-38 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-512 hours','-30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-512 hours','-30 minutes'))",
+      "params": [
+        "perf-visit-026",
+        "Coach Bennett",
+        "delivery",
+        "Furniture delivery",
+        "{{adult2}}",
+        "Sam Rivera",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-533 hours','-51 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-533 hours','-51 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-531 hours','-35 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-531 hours','-35 minutes'))",
+      "params": [
+        "perf-visit-027",
+        "Plumber (Ridge Plumbing)",
+        "visitor",
+        "Helping with the garden",
+        "{{child2}}",
+        "Riley Kim",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at, expected_out_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-550 hours','-4 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-550 hours','-4 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-520 hours','-40 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-520 hours','-40 minutes'), ?)",
+      "params": [
+        "perf-visit-028",
+        "The Patels",
+        "overnight",
+        "Weekend stay",
+        "{{partner}}",
+        "Jordan Lee",
+        "checked_out",
+        "{{date:-20}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__approvals (id, visit_id, decision, decided_by, decided_at) VALUES (?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-549 hours'))",
+      "params": [
+        "perf-appr-028-a",
+        "perf-visit-028",
+        "denied",
+        "{{me}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-571 hours','-17 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-571 hours','-17 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-571 hours','-45 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-571 hours','-45 minutes'))",
+      "params": [
+        "perf-visit-029",
+        "Dana Whitfield",
+        "delivery",
+        "Groceries",
+        "{{child}}",
+        "Taylor Kim",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-588 hours','-30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-588 hours','-30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-586 hours'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-586 hours'))",
+      "params": [
+        "perf-visit-030",
+        "Piano teacher",
+        "visitor",
+        "Play date",
+        "{{partner}}",
+        "Jordan Lee",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at, expected_out_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-609 hours','-43 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-609 hours','-43 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-579 hours','-5 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-579 hours','-5 minutes'), ?)",
+      "params": [
+        "perf-visit-031",
+        "Cousin Leo",
+        "overnight",
+        "Staying over after the game",
+        "{{child}}",
+        "Taylor Kim",
+        "checked_out",
+        "{{date:-23}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-631 hours','-56 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-631 hours','-56 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-629 hours','-10 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-629 hours','-10 minutes'))",
+      "params": [
+        "perf-visit-032",
+        "Parcel courier",
+        "visitor",
+        "Piano lesson",
+        "{{me}}",
+        "Perf Admin",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-647 hours','-9 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-647 hours','-9 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-645 hours','-15 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-645 hours','-15 minutes'))",
+      "params": [
+        "perf-visit-033",
+        "Coach Bennett",
+        "visitor",
+        "Book club night",
+        "{{adult2}}",
+        "Sam Rivera",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-669 hours','-22 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-669 hours','-22 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-669 hours','-20 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-669 hours','-20 minutes'))",
+      "params": [
+        "perf-visit-034",
+        "Plumber (Ridge Plumbing)",
+        "delivery",
+        "Furniture delivery",
+        "{{child2}}",
+        "Riley Kim",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-685 hours','-35 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-685 hours','-35 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-683 hours','-25 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-683 hours','-25 minutes'))",
+      "params": [
+        "perf-visit-035",
+        "The Patels",
+        "visitor",
+        "Study group",
+        "{{adult2}}",
+        "Sam Rivera",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at, expected_out_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-707 hours','-48 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-707 hours','-48 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-677 hours','-30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-677 hours','-30 minutes'), ?)",
+      "params": [
+        "perf-visit-036",
+        "Dana Whitfield",
+        "overnight",
+        "{{child2}}",
+        "Riley Kim",
+        "checked_out",
+        "{{date:-27}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__approvals (id, visit_id, decision, decided_by, decided_at, note) VALUES (?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-706 hours'), ?)",
+      "params": [
+        "perf-appr-036-a",
+        "perf-visit-036",
+        "approved",
+        "{{me}}",
+        "Quiet hours after ten, please."
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-728 hours','-1 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-728 hours','-1 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-728 hours','-35 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-728 hours','-35 minutes'))",
+      "params": [
+        "perf-visit-037",
+        "Piano teacher",
+        "delivery",
+        "Groceries",
+        "{{partner}}",
+        "Jordan Lee",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-745 hours','-14 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-745 hours','-14 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-743 hours','-40 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-743 hours','-40 minutes'))",
+      "params": [
+        "perf-visit-038",
+        "Cousin Leo",
+        "visitor",
+        "Dropping by",
+        "{{child}}",
+        "Taylor Kim",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at, expected_out_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-766 hours','-27 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-766 hours','-27 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-736 hours','-45 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-736 hours','-45 minutes'), ?)",
+      "params": [
+        "perf-visit-039",
+        "Parcel courier",
+        "overnight",
+        "Staying over after the game",
+        "{{me}}",
+        "Perf Admin",
+        "checked_out",
+        "{{date:-29}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__approvals (id, visit_id, decision, note, decided_by, decided_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-765 hours'))",
+      "params": [
+        "perf-appr-039-a",
+        "perf-visit-039",
+        "denied",
+        "Too many guests that weekend, please ask again.",
+        "{{partner}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__approvals (id, visit_id, decision, note, decided_by, decided_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-764 hours'))",
+      "params": [
+        "perf-appr-039-b",
+        "perf-visit-039",
+        "approved",
+        "Sorted out, fine to stay.",
+        "{{partner}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-783 hours','-40 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-783 hours','-40 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-781 hours'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-781 hours'))",
+      "params": [
+        "perf-visit-040",
+        "Coach Bennett",
+        "visitor",
+        "Book club night",
+        "{{child}}",
+        "Taylor Kim",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-804 hours','-53 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-804 hours','-53 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-802 hours','-5 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-802 hours','-5 minutes'))",
+      "params": [
+        "perf-visit-041",
+        "Plumber (Ridge Plumbing)",
+        "visitor",
+        "Helping with the garden",
+        "{{me}}",
+        "Perf Admin",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-826 hours','-6 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-826 hours','-6 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-826 hours','-10 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-826 hours','-10 minutes'))",
+      "params": [
+        "perf-visit-042",
+        "The Patels",
+        "delivery",
+        "Furniture delivery",
+        "{{adult2}}",
+        "Sam Rivera",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-842 hours','-19 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-842 hours','-19 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-840 hours','-15 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-840 hours','-15 minutes'))",
+      "params": [
+        "perf-visit-043",
+        "Dana Whitfield",
+        "visitor",
+        "Dinner",
+        "{{child2}}",
+        "Riley Kim",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at, expected_out_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-864 hours','-32 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-864 hours','-32 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-834 hours','-20 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-834 hours','-20 minutes'), ?)",
+      "params": [
+        "perf-visit-044",
+        "Piano teacher",
+        "overnight",
+        "Weekend stay",
+        "{{partner}}",
+        "Jordan Lee",
+        "checked_out",
+        "{{date:-34}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__approvals (id, visit_id, decision, decided_by, decided_at) VALUES (?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-863 hours'))",
+      "params": [
+        "perf-appr-044-a",
+        "perf-visit-044",
+        "approved",
+        "{{me}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-880 hours','-45 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-880 hours','-45 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-880 hours','-25 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-880 hours','-25 minutes'))",
+      "params": [
+        "perf-visit-045",
+        "Cousin Leo",
+        "delivery",
+        "Groceries",
+        "{{child2}}",
+        "Riley Kim",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-902 hours','-58 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-902 hours','-58 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-900 hours','-30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-900 hours','-30 minutes'))",
+      "params": [
+        "perf-visit-046",
+        "Parcel courier",
+        "visitor",
+        "Piano lesson",
+        "{{partner}}",
+        "Jordan Lee",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at, expected_out_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-923 hours','-11 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-923 hours','-11 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-893 hours','-35 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-893 hours','-35 minutes'), ?)",
+      "params": [
+        "perf-visit-047",
+        "Coach Bennett",
+        "overnight",
+        "{{child}}",
+        "Taylor Kim",
+        "checked_out",
+        "{{date:-36}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__approvals (id, visit_id, decision, decided_by, decided_at, note) VALUES (?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-922 hours'), ?)",
+      "params": [
+        "perf-appr-047-a",
+        "perf-visit-047",
+        "approved",
+        "{{me}}",
+        "Quiet hours after ten, please."
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-940 hours','-24 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-940 hours','-24 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-938 hours','-40 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-938 hours','-40 minutes'))",
+      "params": [
+        "perf-visit-048",
+        "Plumber (Ridge Plumbing)",
+        "visitor",
+        "Helping with the garden",
+        "{{me}}",
+        "Perf Admin",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-961 hours','-37 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-961 hours','-37 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-959 hours','-45 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-959 hours','-45 minutes'))",
+      "params": [
+        "perf-visit-049",
+        "The Patels",
+        "visitor",
+        "Study group",
+        "{{adult2}}",
+        "Sam Rivera",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-978 hours','-50 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-978 hours','-50 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-978 hours'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-978 hours'))",
+      "params": [
+        "perf-visit-050",
+        "Dana Whitfield",
+        "delivery",
+        "Furniture delivery",
+        "{{me}}",
+        "Perf Admin",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-999 hours','-3 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-999 hours','-3 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-997 hours','-5 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-997 hours','-5 minutes'))",
+      "params": [
+        "perf-visit-051",
+        "Piano teacher",
+        "visitor",
+        "Play date",
+        "{{adult2}}",
+        "Sam Rivera",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at, expected_out_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1021 hours','-16 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1021 hours','-16 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-991 hours','-10 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-991 hours','-10 minutes'), ?)",
+      "params": [
+        "perf-visit-052",
+        "Cousin Leo",
+        "overnight",
+        "Weekend stay",
+        "{{child2}}",
+        "Riley Kim",
+        "checked_out",
+        "{{date:-40}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__approvals (id, visit_id, decision, decided_by, decided_at) VALUES (?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1020 hours'))",
+      "params": [
+        "perf-appr-052-a",
+        "perf-visit-052",
+        "approved",
+        "{{me}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1037 hours','-29 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1037 hours','-29 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1037 hours','-15 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1037 hours','-15 minutes'))",
+      "params": [
+        "perf-visit-053",
+        "Parcel courier",
+        "delivery",
+        "Groceries",
+        "{{partner}}",
+        "Jordan Lee",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1059 hours','-42 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1059 hours','-42 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1057 hours','-20 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1057 hours','-20 minutes'))",
+      "params": [
+        "perf-visit-054",
+        "Coach Bennett",
+        "visitor",
+        "Book club night",
+        "{{child}}",
+        "Taylor Kim",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at, expected_out_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1075 hours','-55 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1075 hours','-55 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1045 hours','-25 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1045 hours','-25 minutes'), ?)",
+      "params": [
+        "perf-visit-055",
+        "Plumber (Ridge Plumbing)",
+        "overnight",
+        "Staying over after the game",
+        "{{partner}}",
+        "Jordan Lee",
+        "checked_out",
+        "{{date:-42}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1097 hours','-8 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1097 hours','-8 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1095 hours','-30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1095 hours','-30 minutes'))",
+      "params": [
+        "perf-visit-056",
+        "The Patels",
+        "visitor",
+        "Study group",
+        "{{child}}",
+        "Taylor Kim",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1118 hours','-21 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1118 hours','-21 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1116 hours','-35 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1116 hours','-35 minutes'))",
+      "params": [
+        "perf-visit-057",
+        "Dana Whitfield",
+        "visitor",
+        "Dinner",
+        "{{me}}",
+        "Perf Admin",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1135 hours','-34 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1135 hours','-34 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1135 hours','-40 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1135 hours','-40 minutes'))",
+      "params": [
+        "perf-visit-058",
+        "Piano teacher",
+        "delivery",
+        "{{adult2}}",
+        "Sam Rivera",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1156 hours','-47 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1156 hours','-47 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1154 hours','-45 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1154 hours','-45 minutes'))",
+      "params": [
+        "perf-visit-059",
+        "Cousin Leo",
+        "visitor",
+        "Dropping by",
+        "{{child2}}",
+        "Riley Kim",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at, expected_out_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1173 hours'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1173 hours'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1143 hours'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1143 hours'), ?)",
+      "params": [
+        "perf-visit-060",
+        "Parcel courier",
+        "overnight",
+        "Weekend stay",
+        "{{adult2}}",
+        "Sam Rivera",
+        "checked_out",
+        "{{date:-46}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__approvals (id, visit_id, decision, note, decided_by, decided_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1172 hours'))",
+      "params": [
+        "perf-appr-060-a",
+        "perf-visit-060",
+        "denied",
+        "Too many guests that weekend, please ask again.",
+        "{{me}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__approvals (id, visit_id, decision, note, decided_by, decided_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1171 hours'))",
+      "params": [
+        "perf-appr-060-b",
+        "perf-visit-060",
+        "approved",
+        "Sorted out, fine to stay.",
+        "{{me}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1194 hours','-13 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1194 hours','-13 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1194 hours','-5 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1194 hours','-5 minutes'))",
+      "params": [
+        "perf-visit-061",
+        "Coach Bennett",
+        "delivery",
+        "Groceries",
+        "{{child2}}",
+        "Riley Kim",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1216 hours','-26 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1216 hours','-26 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1214 hours','-10 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1214 hours','-10 minutes'))",
+      "params": [
+        "perf-visit-062",
+        "Plumber (Ridge Plumbing)",
+        "visitor",
+        "Helping with the garden",
+        "{{partner}}",
+        "Jordan Lee",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at, expected_out_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1232 hours','-39 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1232 hours','-39 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1202 hours','-15 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1202 hours','-15 minutes'), ?)",
+      "params": [
+        "perf-visit-063",
+        "The Patels",
+        "overnight",
+        "Staying over after the game",
+        "{{child}}",
+        "Taylor Kim",
+        "checked_out",
+        "{{date:-49}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__approvals (id, visit_id, decision, decided_by, decided_at) VALUES (?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1231 hours'))",
+      "params": [
+        "perf-appr-063-a",
+        "perf-visit-063",
+        "approved",
+        "{{me}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1254 hours','-52 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1254 hours','-52 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1252 hours','-20 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1252 hours','-20 minutes'))",
+      "params": [
+        "perf-visit-064",
+        "Dana Whitfield",
+        "visitor",
+        "Dinner",
+        "{{me}}",
+        "Perf Admin",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1270 hours','-5 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1270 hours','-5 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1268 hours','-25 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1268 hours','-25 minutes'))",
+      "params": [
+        "perf-visit-065",
+        "Piano teacher",
+        "visitor",
+        "Play date",
+        "{{child}}",
+        "Taylor Kim",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1292 hours','-18 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1292 hours','-18 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1292 hours','-30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1292 hours','-30 minutes'))",
+      "params": [
+        "perf-visit-066",
+        "Cousin Leo",
+        "delivery",
+        "Furniture delivery",
+        "{{me}}",
+        "Perf Admin",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1313 hours','-31 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1313 hours','-31 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1311 hours','-35 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1311 hours','-35 minutes'))",
+      "params": [
+        "perf-visit-067",
+        "Parcel courier",
+        "visitor",
+        "Piano lesson",
+        "{{adult2}}",
+        "Sam Rivera",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at, expected_out_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1330 hours','-44 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1330 hours','-44 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1300 hours','-40 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1300 hours','-40 minutes'), ?)",
+      "params": [
+        "perf-visit-068",
+        "Coach Bennett",
+        "overnight",
+        "Weekend stay",
+        "{{child2}}",
+        "Riley Kim",
+        "checked_out",
+        "{{date:-53}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__approvals (id, visit_id, decision, decided_by, decided_at) VALUES (?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1329 hours'))",
+      "params": [
+        "perf-appr-068-a",
+        "perf-visit-068",
+        "approved",
+        "{{me}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1351 hours','-57 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1351 hours','-57 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1351 hours','-45 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1351 hours','-45 minutes'))",
+      "params": [
+        "perf-visit-069",
+        "Plumber (Ridge Plumbing)",
+        "delivery",
+        "{{partner}}",
+        "Jordan Lee",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1368 hours','-10 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1368 hours','-10 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1366 hours'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1366 hours'))",
+      "params": [
+        "perf-visit-070",
+        "The Patels",
+        "visitor",
+        "Study group",
+        "{{child2}}",
+        "Riley Kim",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at, expected_out_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1389 hours','-23 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1389 hours','-23 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1359 hours','-5 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1359 hours','-5 minutes'), ?)",
+      "params": [
+        "perf-visit-071",
+        "Dana Whitfield",
+        "overnight",
+        "Staying over after the game",
+        "{{partner}}",
+        "Jordan Lee",
+        "checked_out",
+        "{{date:-55}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__approvals (id, visit_id, decision, decided_by, decided_at, note) VALUES (?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1388 hours'), ?)",
+      "params": [
+        "perf-appr-071-a",
+        "perf-visit-071",
+        "approved",
+        "{{me}}",
+        "Quiet hours after ten, please."
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1411 hours','-36 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1411 hours','-36 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1409 hours','-10 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1409 hours','-10 minutes'))",
+      "params": [
+        "perf-visit-072",
+        "Piano teacher",
+        "visitor",
+        "Play date",
+        "{{child}}",
+        "Taylor Kim",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1427 hours','-49 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1427 hours','-49 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1425 hours','-15 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1425 hours','-15 minutes'))",
+      "params": [
+        "perf-visit-073",
+        "Cousin Leo",
+        "visitor",
+        "Dropping by",
+        "{{me}}",
+        "Perf Admin",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1449 hours','-2 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1449 hours','-2 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1449 hours','-20 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1449 hours','-20 minutes'))",
+      "params": [
+        "perf-visit-074",
+        "Parcel courier",
+        "delivery",
+        "Furniture delivery",
+        "{{adult2}}",
+        "Sam Rivera",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1465 hours','-15 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1465 hours','-15 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1463 hours','-25 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1463 hours','-25 minutes'))",
+      "params": [
+        "perf-visit-075",
+        "Coach Bennett",
+        "visitor",
+        "Book club night",
+        "{{me}}",
+        "Perf Admin",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at, expected_out_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1487 hours','-28 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1487 hours','-28 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1457 hours','-30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1457 hours','-30 minutes'), ?)",
+      "params": [
+        "perf-visit-076",
+        "Plumber (Ridge Plumbing)",
+        "overnight",
+        "Weekend stay",
+        "{{adult2}}",
+        "Sam Rivera",
+        "checked_out",
+        "{{date:-59}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__approvals (id, visit_id, decision, decided_by, decided_at) VALUES (?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1486 hours'))",
+      "params": [
+        "perf-appr-076-a",
+        "perf-visit-076",
+        "approved",
+        "{{me}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1508 hours','-41 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1508 hours','-41 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1508 hours','-35 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1508 hours','-35 minutes'))",
+      "params": [
+        "perf-visit-077",
+        "The Patels",
+        "delivery",
+        "Groceries",
+        "{{child2}}",
+        "Riley Kim",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1525 hours','-54 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1525 hours','-54 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1523 hours','-40 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1523 hours','-40 minutes'))",
+      "params": [
+        "perf-visit-078",
+        "Dana Whitfield",
+        "visitor",
+        "Dinner",
+        "{{partner}}",
+        "Jordan Lee",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at, expected_out_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1546 hours','-7 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1546 hours','-7 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1516 hours','-45 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1516 hours','-45 minutes'), ?)",
+      "params": [
+        "perf-visit-079",
+        "Piano teacher",
+        "overnight",
+        "Staying over after the game",
+        "{{child}}",
+        "Taylor Kim",
+        "checked_out",
+        "{{date:-62}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1563 hours','-20 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1563 hours','-20 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1561 hours'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1561 hours'))",
+      "params": [
+        "perf-visit-080",
+        "Cousin Leo",
+        "visitor",
+        "{{partner}}",
+        "Jordan Lee",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1584 hours','-33 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1584 hours','-33 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1582 hours','-5 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1582 hours','-5 minutes'))",
+      "params": [
+        "perf-visit-081",
+        "Parcel courier",
+        "visitor",
+        "Piano lesson",
+        "{{child}}",
+        "Taylor Kim",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1606 hours','-46 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1606 hours','-46 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1606 hours','-10 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1606 hours','-10 minutes'))",
+      "params": [
+        "perf-visit-082",
+        "Coach Bennett",
+        "delivery",
+        "Furniture delivery",
+        "{{me}}",
+        "Perf Admin",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1622 hours','-59 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1622 hours','-59 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1620 hours','-15 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1620 hours','-15 minutes'))",
+      "params": [
+        "perf-visit-083",
+        "Plumber (Ridge Plumbing)",
+        "visitor",
+        "Helping with the garden",
+        "{{adult2}}",
+        "Sam Rivera",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at, expected_out_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1644 hours','-12 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1644 hours','-12 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1614 hours','-20 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1614 hours','-20 minutes'), ?)",
+      "params": [
+        "perf-visit-084",
+        "The Patels",
+        "overnight",
+        "Weekend stay",
+        "{{child2}}",
+        "Riley Kim",
+        "checked_out",
+        "{{date:-66}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__approvals (id, visit_id, decision, decided_by, decided_at, note) VALUES (?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1643 hours'), ?)",
+      "params": [
+        "perf-appr-084-a",
+        "perf-visit-084",
+        "denied",
+        "{{me}}",
+        "Quiet hours after ten, please."
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1660 hours','-25 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1660 hours','-25 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1660 hours','-25 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1660 hours','-25 minutes'))",
+      "params": [
+        "perf-visit-085",
+        "Dana Whitfield",
+        "delivery",
+        "Groceries",
+        "{{adult2}}",
+        "Sam Rivera",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1682 hours','-38 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1682 hours','-38 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1680 hours','-30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1680 hours','-30 minutes'))",
+      "params": [
+        "perf-visit-086",
+        "Piano teacher",
+        "visitor",
+        "Play date",
+        "{{child2}}",
+        "Riley Kim",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at, expected_out_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1703 hours','-51 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1703 hours','-51 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1673 hours','-35 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1673 hours','-35 minutes'), ?)",
+      "params": [
+        "perf-visit-087",
+        "Cousin Leo",
+        "overnight",
+        "Staying over after the game",
+        "{{partner}}",
+        "Jordan Lee",
+        "checked_out",
+        "{{date:-68}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__approvals (id, visit_id, decision, decided_by, decided_at) VALUES (?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1702 hours'))",
+      "params": [
+        "perf-appr-087-a",
+        "perf-visit-087",
+        "approved",
+        "{{me}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1720 hours','-4 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1720 hours','-4 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1718 hours','-40 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1718 hours','-40 minutes'))",
+      "params": [
+        "perf-visit-088",
+        "Parcel courier",
+        "visitor",
+        "Piano lesson",
+        "{{child}}",
+        "Taylor Kim",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1741 hours','-17 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1741 hours','-17 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1739 hours','-45 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1739 hours','-45 minutes'))",
+      "params": [
+        "perf-visit-089",
+        "Coach Bennett",
+        "visitor",
+        "Book club night",
+        "{{me}}",
+        "Perf Admin",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1758 hours','-30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1758 hours','-30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1758 hours'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1758 hours'))",
+      "params": [
+        "perf-visit-090",
+        "Plumber (Ridge Plumbing)",
+        "delivery",
+        "Furniture delivery",
+        "{{child}}",
+        "Taylor Kim",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1779 hours','-43 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1779 hours','-43 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1777 hours','-5 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1777 hours','-5 minutes'))",
+      "params": [
+        "perf-visit-091",
+        "The Patels",
+        "visitor",
+        "{{me}}",
+        "Perf Admin",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at, expected_out_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1801 hours','-56 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1801 hours','-56 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1771 hours','-10 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1771 hours','-10 minutes'), ?)",
+      "params": [
+        "perf-visit-092",
+        "Dana Whitfield",
+        "overnight",
+        "Weekend stay",
+        "{{adult2}}",
+        "Sam Rivera",
+        "checked_out",
+        "{{date:-73}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__approvals (id, visit_id, decision, decided_by, decided_at) VALUES (?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1800 hours'))",
+      "params": [
+        "perf-appr-092-a",
+        "perf-visit-092",
+        "approved",
+        "{{me}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1817 hours','-9 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1817 hours','-9 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1817 hours','-15 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1817 hours','-15 minutes'))",
+      "params": [
+        "perf-visit-093",
+        "Piano teacher",
+        "delivery",
+        "Groceries",
+        "{{child2}}",
+        "Riley Kim",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1839 hours','-22 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1839 hours','-22 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1837 hours','-20 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1837 hours','-20 minutes'))",
+      "params": [
+        "perf-visit-094",
+        "Cousin Leo",
+        "visitor",
+        "Dropping by",
+        "{{partner}}",
+        "Jordan Lee",
+        "checked_out"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__visits (id, guest_name, visit_type, purpose, host_id, host_name, status, check_in_at, created_at, check_out_at, updated_at, expected_out_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1855 hours','-35 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1855 hours','-35 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1825 hours','-25 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1825 hours','-25 minutes'), ?)",
+      "params": [
+        "perf-visit-095",
+        "Parcel courier",
+        "overnight",
+        "Staying over after the game",
+        "{{child2}}",
+        "Riley Kim",
+        "checked_out",
+        "{{date:-75}}"
+      ]
+    },
+    {
+      "sql": "INSERT INTO app_guest_log__approvals (id, visit_id, decision, decided_by, decided_at, note) VALUES (?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1854 hours'), ?)",
+      "params": [
+        "perf-appr-095-a",
+        "perf-visit-095",
+        "approved",
+        "{{me}}",
+        "Quiet hours after ten, please."
+      ]
+    }
+  ]
+}

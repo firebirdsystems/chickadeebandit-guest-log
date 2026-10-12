@@ -84,6 +84,8 @@
     input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); }
     .empty, .loading { color: var(--muted); text-align: center; padding: 32px 16px; }
     .error { background: var(--red-soft); color: var(--red); padding: 9px 12px; border-radius: 8px; margin-bottom: 10px; font-size: .86rem; }
+    .load-error { margin: 0 0 12px; padding: 10px 14px; border-radius: 10px; background: var(--hub-tint-danger, #fee2e2); color: var(--hub-tint-danger-fg, #b91c1c); font-size: 0.9rem; display: flex; gap: 10px; align-items: center; justify-content: space-between; }
+    .load-error-retry { background: none; border: 1px solid currentColor; border-radius: 8px; padding: 5px 10px; font: inherit; font-weight: 600; color: inherit; cursor: pointer; flex-shrink: 0; }
     .notice { background: var(--amber-soft); color: var(--amber); padding: 9px 12px; border-radius: 8px; margin-bottom: 10px; font-size: .86rem; }
     .section-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 6px 2px 10px; }
     .section-head h2 { margin-bottom: 0; }
@@ -141,6 +143,7 @@ let approvals = [];
 let tab = "onsite";
 let searchQ = "";       // in-app search (see logic.js searchableFields)
 let error = "";
+let loadFailed = false; // a load failed; cleared when one succeeds
 let notice = "";
 let modalEl = null;
 
@@ -158,8 +161,8 @@ async function db(sql, params = []) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ sql, params }),
   });
-  const json = await res.json();
-  if (json.error) throw new Error(json.error);
+  const json = await res.json().catch(() => null);
+  if (!res.ok || !json || typeof json !== "object" || json.error) throw new Error(json?.error || "Couldn’t reach the hub. Try again.");
   return json;
 }
 
@@ -182,8 +185,8 @@ async function appendRecord(name, data) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
-  const json = await res.json().catch(() => ({}));
-  if (!res.ok || json.error) throw new Error(json.error || "Append failed");
+  const json = await res.json().catch(() => null);
+  if (!res.ok || !json || typeof json !== "object" || json.error) throw new Error(json?.error || "Append failed");
   return json;
 }
 
@@ -212,21 +215,24 @@ async function loadContext() {
     memberMap = new Map(members.map(m => [m.id, m]));
     return;
   }
-  try {
-    const res = await fetch(`${CONTEXT}?keys=family.members,family.groups`);
-    const data = await res.json();
-    members = data["family.members"] ?? [];
-    groups  = data["family.groups"]  ?? [];
-  } catch { members = []; groups = []; }
+  // Throws when the context cannot be read: refresh() counts it as a failed
+  // load, since without the groups nobody reads as leadership.
+  const res = await fetch(`${CONTEXT}?keys=family.members,family.groups`);
+  const data = await res.json().catch(() => null);
+  if (!res.ok || !data || typeof data !== "object" || data.error) throw new Error("Couldn’t reach the hub. Try again.");
+  // A 200 can still name a key the hub failed to read: that is a failed read too.
+  if (Array.isArray(data.$errors) && data.$errors.some(k => k === "family.members" || k === "family.groups")) throw new Error("Couldn’t reach the hub. Try again.");
+  members = data["family.members"] ?? [];
+  groups  = data["family.groups"]  ?? [];
   memberMap = new Map(members.map(m => [m.id, m]));
 }
 
 async function loadSettings() {
   if (!DB) { settings = { leadership_group_id: "leaders" }; return; }
-  try {
-    const { rows } = await db(`SELECT key, value FROM app_guest_log__settings WHERE key = 'leadership_group_id'`);
-    for (const r of rows) if (r.key === "leadership_group_id") settings.leadership_group_id = r.value || null;
-  } catch { /* leave defaults */ }
+  // A failed read throws (refresh() shows the banner): "no leadership group"
+  // is only said of a read that answered.
+  const { rows } = await db(`SELECT key, value FROM app_guest_log__settings WHERE key = 'leadership_group_id'`);
+  for (const r of rows) if (r.key === "leadership_group_id") settings.leadership_group_id = r.value || null;
 }
 
 async function loadData() {
@@ -261,8 +267,9 @@ async function refresh() {
   try {
     await Promise.all([loadContext(), loadSettings()]);
     await loadData();
+    loadFailed = false;
     render();
-  } catch (e) { error = e.message; render(); }
+  } catch { loadFailed = true; render(); }
 }
 
 function clearMessages() { error = ""; notice = ""; }
@@ -314,7 +321,11 @@ async function checkOut(visitId) {
   if (!v || !canManageVisit(v)) return;
   const out = nowIso();
   try {
-    if (DB) await db(`UPDATE app_guest_log__visits SET status = 'checked_out', check_out_at = ?, updated_at = ? WHERE id = ?`, [out, out, visitId]);
+    if (DB) {
+      const { changed } = await db(`UPDATE app_guest_log__visits SET status = 'checked_out', check_out_at = ?, updated_at = ? WHERE id = ?`, [out, out, visitId]);
+      // The hub answers a write the row policy narrowed to nothing as a success with no rows changed.
+      if (changed === 0) { await loadData(); return showError("This entry can no longer be changed."); }
+    }
     visits = visits.map(x => x.id === visitId ? { ...x, status: "checked_out", check_out_at: out } : x);
     await publishEvent("guest.checked_out", visitId, {
       visit_type: v.visit_type,
@@ -331,7 +342,10 @@ async function deleteVisit(visitId) {
   const ok = await hubConfirm({ message: "Delete this log entry?", confirmLabel: "Delete", destructive: true });
   if (!ok) return;
   try {
-    if (DB) await db(`DELETE FROM app_guest_log__visits WHERE id = ?`, [visitId]);
+    if (DB) {
+      const { changed } = await db(`DELETE FROM app_guest_log__visits WHERE id = ?`, [visitId]);
+      if (changed === 0) { await loadData(); return showError("This entry can no longer be changed."); }
+    }
     visits = visits.filter(x => x.id !== visitId);
     approvals = approvals.filter(a => a.visit_id !== visitId);
     showNotice("Entry deleted.");
@@ -454,7 +468,7 @@ window.saveSettings = async function () {
 // ── Render ──────────────────────────────────────────────────────────────────────
 
 function renderMessages() {
-  return `${error ? `<div class="error">${esc(error)}</div>` : ""}${notice ? `<div class="notice">${esc(notice)}</div>` : ""}`;
+  return `${loadFailed ? `<div class="load-error" data-testid="load-error" role="alert"><span>Couldn’t load the guest log.</span> <button type="button" class="load-error-retry" data-testid="load-retry">Try again</button></div>` : ""}${error ? `<div class="error">${esc(error)}</div>` : ""}${notice ? `<div class="notice">${esc(notice)}</div>` : ""}`;
 }
 
 function fmtWhen(iso) {
@@ -517,6 +531,7 @@ function renderVisitList(list) {
   const shown = searchQ ? list.filter(v => searchMatch(searchQ, searchableFields(v))) : list;
   if (shown.length) return shown.map(renderVisit).join("");
   if (searchQ) return `<div class="card empty">No visits match "${esc(searchQ)}".</div>`;
+  if (loadFailed) return "";
   return `<div class="card empty">Nothing here yet.</div>`;
 }
 
@@ -533,7 +548,7 @@ function render() {
     ? `Showing the full house log.`
     : `Showing guests you've signed in.`;
 
-  const leadershipNotConfigured = !leadershipConfigured()
+  const leadershipNotConfigured = !leadershipConfigured() && !loadFailed
     ? `<div class="notice">No leadership group is configured, so overnight approvals are disabled and no one has the full-log view. ${IS_ADMIN ? `Use <strong>Settings</strong> to pick one.` : `Ask a hub admin to set one in Settings.`}</div>`
     : "";
 
@@ -543,10 +558,10 @@ function render() {
         <h1>${glyph("book-open")} Guest Log</h1>
         <p class="muted tiny">${esc(scopeNote)}</p>
       </div>
-      <div class="row" style="justify-content:flex-end">
+      ${loadFailed ? "" : `<div class="row" style="justify-content:flex-end">
         <button class="btn" onclick="openLogModal()">Sign in guest</button>
         <button class="btn btn-ghost btn-sm" onclick="openSettingsModal()">Settings</button>
-      </div>
+      </div>`}
     </div>
     ${renderMessages()}
     ${leadershipNotConfigured}
@@ -578,7 +593,7 @@ document.addEventListener("click", (e) => {
   const t = e.target.closest("button");
   if (!t) return;
   if (t.hasAttribute("data-tab")) { tab = t.getAttribute("data-tab"); clearMessages(); render(); return; }
-  if (t.matches("[data-refresh]")) return refresh();
+  if (t.matches('[data-refresh], [data-testid="load-retry"]')) return refresh();
   if (t.hasAttribute("data-checkout")) return checkOut(t.getAttribute("data-checkout"));
   if (t.hasAttribute("data-delete")) return deleteVisit(t.getAttribute("data-delete"));
   if (t.hasAttribute("data-approve")) return decideOvernight(t.getAttribute("data-approve"), "approved");

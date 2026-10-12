@@ -313,7 +313,7 @@ async function submitVisitForm(form) {
     tab = "onsite";
     closeModal();
     showNotice("Guest signed in.");
-  } catch (e) { showError(e.message); }
+  } catch (e) { console.error(e); showError("Couldn’t sign the guest in — try again."); }
 }
 
 async function checkOut(visitId) {
@@ -333,7 +333,7 @@ async function checkOut(visitId) {
       check_out_at: out,
     });
     showNotice("Guest checked out.");
-  } catch (e) { showError(e.message); }
+  } catch (e) { console.error(e); showError("Couldn’t check the guest out — try again."); }
 }
 
 async function deleteVisit(visitId) {
@@ -349,7 +349,7 @@ async function deleteVisit(visitId) {
     visits = visits.filter(x => x.id !== visitId);
     approvals = approvals.filter(a => a.visit_id !== visitId);
     showNotice("Entry deleted.");
-  } catch (e) { showError(e.message); }
+  } catch (e) { console.error(e); showError("Couldn’t delete the entry — try again."); }
 }
 
 // ── Overnight approvals (leadership only, via append endpoint) ───────────────────
@@ -363,7 +363,7 @@ async function decideOvernight(visitId, decision, note = "") {
     approvals = [...approvals, { id: uid("appr"), visit_id: visitId, decision, note, decided_by: ME.id, decided_at: nowIso() }];
     closeModal();
     showNotice(decision === "approved" ? "Overnight stay approved." : "Overnight stay denied.");
-  } catch (e) { showError(e.message); }
+  } catch (e) { console.error(e); showError("Couldn’t record the decision — try again."); }
 }
 
 window.openDenyModal = function (visitId) {
@@ -461,7 +461,7 @@ window.saveSettings = async function () {
     render();
   } catch (e) {
     if (btn) { btn.disabled = false; btn.textContent = "Save"; }
-    showError(e.message);
+    console.error(e); showError("Couldn’t save the settings — try again.");
   }
 };
 
@@ -606,7 +606,7 @@ document.addEventListener("submit", (e) => {
     e.preventDefault();
     const btn = form.querySelector(".btn-primary");
     if (btn) { btn.disabled = true; btn.textContent = "Signing in…"; }
-    submitVisitForm(form).catch((err) => { if (btn) { btn.disabled = false; btn.textContent = "Sign in"; } showError(err.message); });
+    submitVisitForm(form).catch((err) => { if (btn) { btn.disabled = false; btn.textContent = "Sign in"; } console.error(err); showError("Couldn’t sign the guest in — try again."); });
     return;
   }
   if (form.id === "deny-form") {
@@ -614,7 +614,7 @@ document.addEventListener("submit", (e) => {
     const btn = form.querySelector(".btn-danger");
     if (btn) { btn.disabled = true; btn.textContent = "Denying…"; }
     decideOvernight(form.getAttribute("data-visit"), "denied", form.note.value.trim())
-      .catch((err) => { if (btn) { btn.disabled = false; btn.textContent = "Deny stay"; } showError(err.message); });
+      .catch((err) => { if (btn) { btn.disabled = false; btn.textContent = "Deny stay"; } console.error(err); showError("Couldn’t record the decision — try again."); });
     return;
   }
 });

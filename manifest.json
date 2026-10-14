@@ -86,12 +86,7 @@
       "adults_bypass": false,
       "privileged_groups": [
         { "settings_table": "settings", "settings_key": "leadership_group_id" }
-      ],
-      "retain_days": {
-        "default": 90,
-        "timestamp_column": "check_in_at",
-        "dependent_tables": [{ "table": "approvals", "foreign_key": "visit_id" }]
-      }
+      ]
     },
     "approvals": {
       "kind": "inherit_visibility",
@@ -103,6 +98,13 @@
     },
     "settings": {
       "kind": "app_config"
+    }
+  },
+  "retention": {
+    "visits": {
+      "default": 90,
+      "timestamp_column": "check_in_at",
+      "dependent_tables": [{ "table": "approvals", "foreign_key": "visit_id" }]
     }
   },
   "admin_config": {
@@ -164,9 +166,6 @@
       "query": "SELECT COUNT(*) AS n FROM app_guest_log__visits WHERE check_out_at IS NULL LIMIT 1"
     },
     "display": { "template": "badge", "count": "n", "label": "on site", "severity": "info" }
-  },
-  "resource_limits": {
-    "max_db_bytes": 52428800
   },
   "icon": "📖",
   "ai_access": {
